@@ -1,0 +1,216 @@
+DROP DATABASE din_hizmetleri;
+
+CREATE DATABASE din_hizmetleri;
+USE din_hizmetleri;
+
+ CREATE TABLE din_hizmetleri(
+	yasal_id INT PRIMARY KEY,
+    diyanet_hizmet_döküm VARCHAR(300),
+    islam_ahlakı TEXT,
+    islam_hukuku TEXT
+ );
+ 
+-- İRŞAT HİZMETLERİ TABLOSU
+CREATE TABLE irsat_hizmetleri (
+  i_id INT NOT NULL AUTO_INCREMENT,
+  hizmet_adi VARCHAR(255) NOT NULL,
+  hizmet_tarihi DATE NOT NULL,
+  hizmet_saati TIME NOT NULL,
+  hizmet_yeri VARCHAR(255) NOT NULL,
+  hizmet_aciklama TEXT,
+  hizmet_turu VARCHAR(255) NOT NULL,
+  PRIMARY KEY (i_id)
+);
+
+-- VAAZLAR TABLOSU
+CREATE TABLE vaazlar (
+  va_id INT NOT NULL AUTO_INCREMENT,
+  vaaz_adi VARCHAR(255) NOT NULL,
+  vaaz_tarihi DATE NOT NULL,
+  vaaz_saati TIME NOT NULL,
+  vaaz_yeri VARCHAR(255) NOT NULL,
+  vaaz_eden_unvanı VARCHAR(50),
+  hedef_kitle VARCHAR(55),
+  bölgelere_göre_vaaz_sayıları varchar(255),
+  vaaz_aciklama TEXT,
+  PRIMARY KEY (va_id),
+  i_id INT,
+  FOREIGN KEY (i_id) REFERENCES irsat_hizmetleri(i_id)
+);
+
+-- HUTBELER TABLOSU
+CREATE TABLE hutbeler (
+  hu_id INT NOT NULL AUTO_INCREMENT,
+  hutbe_adi VARCHAR(255) NOT NULL,
+  Hutbe_Konularıyla_İlgili_Veriler VARCHAR(255),
+  hutbe_tarihi DATE NOT NULL,
+  hutbe_saati TIME NOT NULL,
+  hutbe_yeri VARCHAR(255) NOT NULL,
+  Hutbe_Hazırlayanlarla_İlgili_Veriler TEXT, 
+  hutbe_aciklama TEXT,
+  PRIMARY KEY (hu_id),
+  i_id INT,
+  FOREIGN KEY (i_id) REFERENCES irsat_hizmetleri(i_id)
+);
+
+-- KONFERANS, PANEL, SEMPOZYUM, SEMİNER VE RADYO-TV PROGRAMLARI TABLOSU
+CREATE TABLE konferanslar (
+  ko_id INT NOT NULL AUTO_INCREMENT,
+  etkinlik_adi VARCHAR(255) NOT NULL,
+  etkinlik_tarihi DATE NOT NULL,
+  etkinlik_saati TIME NOT NULL,
+  etkinlik_yeri VARCHAR(255) NOT NULL,
+  etkinlik_aciklama TEXT,
+  PRIMARY KEY (ko_id),
+  i_id INT,
+  FOREIGN KEY (i_id) REFERENCES irsat_hizmetleri(i_id)
+);
+
+-- KUTLU DOĞUM HAFTASI ETKİNLİKLERİ TABLOSU
+CREATE TABLE kutlu_dogum_etkinlikleri (
+  ku_id INT NOT NULL AUTO_INCREMENT,
+  etkinlik_adi VARCHAR(255) NOT NULL,
+  etkinlik_tarihi DATE NOT NULL,
+  etkinlik_saati TIME NOT NULL,
+  etkinlik_yeri VARCHAR(255) NOT NULL,
+  etkinlik_aciklama TEXT,
+  PRIMARY KEY (ku_id),
+  i_id INT,
+  FOREIGN KEY (i_id) REFERENCES irsat_hizmetleri(i_id)
+);
+
+-- BAŞVAİZLER VE UZMAN VAİZLER ÇALIŞTAYI TABLOSU
+CREATE TABLE calistaylar (
+  c_id INT NOT NULL AUTO_INCREMENT,
+  calistay_adi VARCHAR(255) NOT NULL,
+  calistay_tarihi DATE NOT NULL,
+  calistay_saati TIME NOT NULL,
+  calistay_yeri VARCHAR(255) NOT NULL,
+  calistay_aciklama TEXT,
+  PRIMARY KEY (c_id),
+  i_id INT,
+  FOREIGN KEY (i_id) REFERENCES irsat_hizmetleri(i_id)
+);
+
+-- PERSONELE YÖNELİK REHBER KİTAPLAR HAZIRLANMASI TABLOSU
+CREATE TABLE rehber_kitaplar (
+  r_id INT NOT NULL,
+  kitap_adi VARCHAR(99) NOT NULL,
+  ilim_alani VARCHAR(21) NOT NULL,
+  kitap_aciklama TEXT,
+  PRIMARY KEY (r_id),
+  i_id INT,
+  FOREIGN KEY (i_id) REFERENCES irsat_hizmetleri(i_id)
+  );
+
+-- CAMİ HİZMETLERİ
+CREATE TABLE cami_hizmetleri (
+  ca_id INT PRIMARY KEY,
+  faaliyet_türleri VARCHAR(255),
+  önemli_gün_ve_geceler VARCHAR(255),
+  hizmet_aciklmalari TEXT
+);
+
+-- RAMAZAN AYI FAALİYETLERİ
+CREATE TABLE ramazan_faaliyetleri(
+  ra_id INT NOT NULL AUTO_INCREMENT,
+  başkanlık_tarafindan_faaliyetler VARCHAR(255),
+  İlçe_Müftülükleri_ile_Müşavirliğin_Faaliyetleri VARCHAR(255),
+  değelendirme_ve_sonuç VARCHAR(255),
+  PRIMARY KEY (ra_id),
+  ca_id INT,
+  FOREIGN KEY (ca_id) REFERENCES cami_hizmetleri(ca_id)
+);
+
+ -- CAMİLER VE DİN GÖREVLİLERİ HAFTASI
+ CREATE TABLE camiler_ve_din_görevlileri_haftası(
+  di_id INT NOT NULL AUTO_INCREMENT,
+  başkanlık_tarafindan_faaliyetler VARCHAR(255),
+  İlçe_Müftülükleri_ile_Müşavirliğin_Faaliyetleri VARCHAR(255),
+  değelendirme_ve_sonuç VARCHAR(255),
+  PRIMARY KEY (di_id),
+  ca_id INT,
+  FOREIGN KEY (ca_id) REFERENCES cami_hizmetleri(ca_id)
+ );
+
+ -- SABAH NAMAZI HADİS 
+ CREATE TABLE sabah_namazı_hadis(
+   sa_id INT NOT NULL AUTO_INCREMENT,
+   sabah_namazı_hadis_okumaları VARCHAR(255),
+   hadis_türü VARCHAR(100),
+   hadis_açıklama TEXT,
+   PRIMARY KEY (sa_id),
+   ca_id INT,
+   FOREIGN KEY (ca_id) REFERENCES cami_hizmetleri(ca_id)
+ );
+ 
+  -- İKİNCİ CAMİ GÖREVLİLERİ ÇALIŞTAYI 
+  CREATE TABLE ikinci_cami_görevlileri_çalıştayı(
+   çal_id INT NOT NULL AUTO_INCREMENT,
+   Çalıştaya_Yönelik_Değerlendirme_Tespit_ve_Öneriler TEXT,
+   Din_Görevlilerine_Yönelik_Değerlendirme_Tespit_ve_Öneriler TEXT,
+   Camilere_Yönelik_Değerlendirme_Tespit_ve_Öneriler TEXT,
+   Cami_Cemaatine_Yönelik_Değerlendirme_Tespit_ve_Öneriler TEXT,
+   PRIMARY KEY (çal_id),
+   ca_id INT,
+   FOREIGN KEY (ca_id) REFERENCES cami_hizmetleri(ca_id)
+  );
+ 
+  -- SOSYAL VE KÜLTÜREL İÇERİKLİ DİN HİZMETLERİ 
+  CREATE TABLE sosyal_ve_kültürel_hizmetler(
+    sosyal_id INT PRIMARY KEY,
+    özel_din_günleri VARCHAR(255),
+    başkanlık_tarafından_yapılan_faaliyetler VARCHAR(255),
+    faaliyet_bildirgesi TEXT
+  );
+  
+   -- KURBAN HİZMETLERİ
+   CREATE TABLE kurban_hizmetleri(
+	 kur_id INT NOT NULL AUTO_INCREMENT,
+     başkanlık_tarafından_yapılan_faaliyetler VARCHAR(255),
+	 İl_ve_İlçe_Kurban_Hizmetleri_Komisyonlarınca_Yapılan_Faaliyetler VARCHAR(255),
+     Vekaletle_kurban_kesim_organizayson VARCHAR(255),
+     Basında_kurban_hizmetleri VARCHAR(255),
+     PRIMARY KEY (kur_id),
+     sosyal_id INT,
+     FOREIGN KEY (sosyal_id) REFERENCES sosyal_ve_kültürel_hizmetler(sosyal_id)
+   );
+   
+    -- 18 MART ŞEHİTLER GÜNÜ
+    CREATE TABLE sehitler_günü(
+	  seh_id INT NOT NULL AUTO_INCREMENT,
+      yurt_içi_faaliyetleri VARCHAR(255),
+      yurt_dışı_faaliyetleri VARCHAR(255),
+      basında_18_mart_sehitler_günü TEXT,
+      PRIMARY KEY (seh_id),
+      sosyal_id INT,
+      FOREIGN KEY (sosyal_id) REFERENCES sosyal_ve_kültürel_hizmetler(sosyal_id)
+    );
+    
+     -- 19 EYLÜL GAZİLER GÜNÜ
+     CREATE TABLE gaziler_günü(
+        gazi_id INT NOT NULL AUTO_INCREMENT,
+        yurt_içi_faaliyetleri VARCHAR(255),
+        yurt_dışı_faaliyetleri VARCHAR(255),
+        basında_gaziler_günü TEXT,
+        PRIMARY KEY (gazi_id),
+        sosyal_id INT,
+        FOREIGN KEY (sosyal_id) REFERENCES sosyal_ve_kültürel_hizmetler(sosyal_id)
+     );
+     
+      -- VAKİT HESAPLAMA
+      CREATE TABLE vakit_hesapları(
+		vakit_id INT NOT NULL AUTO_INCREMENT,
+        namaz_vakitleri_bölgelere_ait_çalışmalar VARCHAR(255),
+        kameri_aybaşı_tepit VARCHAR(255),
+        kıble_açı_saatler VARCHAR(300),
+        internet_hizmetleri VARCHAR(255),
+        PRIMARY KEY (vakit_id),
+        sosyal_id INT,
+        FOREIGN KEY (sosyal_id) REFERENCES sosyal_ve_kültürel_hizmetler(sosyal_id)
+        );
+        
+	
+    
+    
+    
